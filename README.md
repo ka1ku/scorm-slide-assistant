@@ -1,86 +1,106 @@
 # SCORM Slide Assistant
 
-A small, open-source **browser extension** that offers optional convenience controls for **Articulate Storyline** courses delivered via SCORM (for example, National Safety Council training portals and Thought Industries hosts).
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Chrome MV3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?logo=googlechrome&logoColor=white)](manifest.json)
+[![Version](https://img.shields.io/badge/version-1.3.0-blue)](manifest.json)
 
-![Extension icon](nsc-auto-next/icons/icon128.png)
+Optional browser-extension controls for **Articulate Storyline** courses delivered through SCORM—auto-advancing slides when the player allows, adjusting built-in playback speed, and helping media continue when the tab is in the background.
 
-## What this software does
+<p align="center">
+  <img src="icons/icon128.png" alt="SCORM Slide Assistant icon" width="96" height="96" />
+</p>
 
-- **Auto-advance:** When the course player exposes an enabled **Next** control, the extension can activate it on your behalf—only while that control is already available in the UI (same as a manual click).
-- **Playback speed:** Selects a speed from the player’s built-in speed menu when present.
-- **Background playback helper:** Reduces cases where the player pauses because the browser tab lost focus.
+## Features
 
-## What this software does **not** do
+| Feature | Description |
+|--------|-------------|
+| **Auto-advance** | Clicks the player’s **Next** control when it is enabled (same as a manual click). |
+| **Playback speed** | Sets speed via the player’s native speed menu (0.5×–2×). |
+| **Background helper** | Patches visibility/focus APIs so many players do not pause when you switch tabs. |
+| **Quiz-safe** | Does not auto-submit quizzes when a Submit control is detected. |
 
-- Does **not** answer quiz questions, submit assessments, or change scores.
-- Does **not** bypass locked navigation, timers, or completion requirements imposed by the course.
-- Does **not** modify server-side records or certificates.
-- Does **not** break DRM or access content you are not authorized to view.
+## What it does not do
 
-Auto-advance is **disabled on detected quiz slides** (for example, when a Submit control is shown).
+- Answer quiz questions or change scores  
+- Bypass timers, locks, or completion requirements  
+- Modify server-side training records  
+- Access content you are not authorized to view  
 
-## Important notices (please read)
+## Important notices
 
-### No affiliation
+**No affiliation** — Not affiliated with NSC, Articulate, Thought Industries, ScormCloud, or any training provider.
 
-This project is **not affiliated with, endorsed by, or sponsored by** the National Safety Council (NSC), Articulate, Thought Industries, ScormCloud, or any training provider. Trademarks belong to their respective owners.
+**Your responsibility** — Follow your employer, school, and platform terms of use. Many programs require you to personally complete training; automation may violate those rules.
 
-### Your responsibilities
+**No warranty** — Software is provided “as is.” See [LICENSE](LICENSE).
 
-You are solely responsible for how you use this software.
+## Install
 
-- Review and follow your **employer’s policies**, your **school’s academic integrity rules**, and the **terms of use** of any training platform before installing or using this extension.
-- Many training programs require you to **personally view** content and **personally complete** evaluations. Using automation may violate those rules even when it is technically possible.
-- This software is provided for **legitimate accessibility and productivity** scenarios (for example, reducing repetitive clicking when the platform already allows faster playback and manual Next). **Misuse is discouraged.**
+### From source (recommended)
 
-### Disclaimer of warranty
+```bash
+git clone https://github.com/ka1ku/scorm-slide-assistant.git
+```
 
-This software is provided **“as is”**, without warranty of any kind. See [LICENSE](LICENSE) for the full legal terms. The authors are not liable for disciplinary action, loss of certification, account termination, or any other consequences arising from use or misuse.
-
-## Installation (Chrome / Edge)
-
-1. Clone this repository.
-2. Open `chrome://extensions` (or `edge://extensions`).
-3. Enable **Developer mode**.
-4. Click **Load unpacked** and select the `nsc-auto-next` folder.
-
-Reload the extension after updates.
+1. Open `chrome://extensions` (or `edge://extensions`).
+2. Enable **Developer mode**.
+3. Click **Load unpacked** and select the **repository root** folder (where `manifest.json` lives).
+4. Reload the extension after pulling updates.
 
 ## Usage
 
-1. Open your SCORM course as usual in the browser.
-2. Click the extension icon.
-3. Toggle **Auto-advance** and adjust **Playback speed** as desired.
+1. Open your SCORM course in the browser and start a module.
+2. Click the extension toolbar icon.
+3. Toggle **Auto-advance** and set **Playback speed** as needed.
 
-Settings sync via Chrome’s `storage.sync` when signed into the browser.
+Settings sync through `chrome.storage.sync` when you are signed into Chrome.
 
-## Supported sites
+## Supported hosts
 
-The extension runs only on hosts declared in `manifest.json`, including:
+Declared in [`manifest.json`](manifest.json):
 
-- `training.nsc.org` and related `*.nsc.org` paths  
-- `scorm.thoughtindustries.com`  
-- Common ScormCloud / Rustici hosts  
+- `training.nsc.org` / `*.nsc.org`
+- `scorm.thoughtindustries.com` / `*.thoughtindustries.com`
+- `*.scormcloud.com` / `*.cloud.scorm.com`
 
-If your organization uses another SCORM host, you may add a match pattern in the manifest for personal use.
+Add your own `matches` patterns for other SCORM hosts if needed.
+
+## How it works
+
+```
+┌─────────────────────────────────────────┐
+│  Browser tab (training portal)          │
+│  ┌───────────────────────────────────┐  │
+│  │  SCORM iframe (Storyline player)  │  │
+│  │  • focus-patch.js  (MAIN world)   │  │
+│  │  • content.js      (isolated)     │  │
+│  └───────────────────────────────────┘  │
+└─────────────────────────────────────────┘
+```
+
+- **`focus-patch.js`** — Runs at `document_start` in the page context so Storyline sees the tab as focused/visible.
+- **`content.js`** — Finds `#nav-controls button#next`, respects disabled state, skips quiz slides.
+
+Background audio/video is **best-effort**; Chrome may still throttle or pause media in inactive tabs.
 
 ## Privacy
 
-- No analytics, accounts, or remote servers.
-- Settings (enabled flag, speed) are stored locally via `chrome.storage.sync`.
+No analytics, accounts, or remote servers. Only local settings (enabled, speed) via `chrome.storage.sync`.
 
-## Development
+## Project layout
 
-| File | Role |
-|------|------|
-| `content.js` | Slide navigation and playback speed |
-| `focus-patch.js` | Keeps the player active when the tab is in the background |
-| `popup.html` / `popup.js` | Toolbar popup UI |
-
-## License
-
-[MIT License](LICENSE) — Copyright (c) 2026 ka1ku
+| File | Purpose |
+|------|---------|
+| `manifest.json` | Extension manifest (MV3) |
+| `content.js` | Auto-advance and playback speed |
+| `focus-patch.js` | Background-tab playback helper |
+| `popup.html` / `popup.js` | Toolbar popup |
+| `icons/` | Extension icons |
 
 ## Contributing
 
-Issues and pull requests are welcome. Please do not use this project to facilitate academic dishonesty or contractual violations.
+Issues and pull requests are welcome. Please use this project responsibly and in line with platform policies.
+
+## License
+
+[MIT](LICENSE) © 2026 [ka1ku](https://github.com/ka1ku)

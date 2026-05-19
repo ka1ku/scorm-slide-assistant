@@ -2,3 +2,5 @@
 *.pem
 *.crx
 *.zip
+inspect-next-report.json
+nsc-auto-next/

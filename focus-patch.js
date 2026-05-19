@@ -11,6 +11,17 @@
     document.hasFocus = () => true;
   } catch (_) {}
 
+  const noop = () => {};
+  for (const [obj, prop] of [
+    [document, 'onvisibilitychange'],
+    [window, 'onblur'],
+    [window, 'onpagehide'],
+  ]) {
+    try {
+      Object.defineProperty(obj, prop, { configurable: true, get: () => null, set: noop });
+    } catch (_) {}
+  }
+
   const block = new Set([
     'visibilitychange',
     'webkitvisibilitychange',
