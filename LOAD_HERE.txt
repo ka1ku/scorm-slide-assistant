@@ -1,0 +1,3 @@
+Load THIS folder in Chrome (chrome://extensions → Load unpacked).
+
+You should see manifest.json in this folder. If Chrome says the manifest could not be loaded, you may have selected the wrong directory—try the nsc-auto-next/ subfolder instead.

@@ -1,0 +1,3 @@
+Load THIS folder in Chrome (chrome://extensions → Load unpacked).
+
+The manifest.json file must be in the folder you select.

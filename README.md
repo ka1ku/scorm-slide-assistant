@@ -40,12 +40,17 @@ Optional browser-extension controls for **Articulate Storyline** courses deliver
 
 ```bash
 git clone https://github.com/ka1ku/scorm-slide-assistant.git
+cd scorm-slide-assistant
 ```
 
 1. Open `chrome://extensions` (or `edge://extensions`).
 2. Enable **Developer mode**.
-3. Click **Load unpacked** and select the **repository root** folder (where `manifest.json` lives).
+3. Click **Load unpacked** and select **one** of these folders (whichever contains `manifest.json` on your machine):
+   - **Repository root** — `scorm-slide-assistant/` (same folder as this README), or
+   - **`nsc-auto-next/`** — use this if you previously loaded the extension from that path.
 4. Reload the extension after pulling updates.
+
+**“Could not load manifest”** — You selected a parent folder or a path without `manifest.json`. Open the folder in Finder and confirm `manifest.json` is visible, then load that exact folder.
 
 ## Usage
 
