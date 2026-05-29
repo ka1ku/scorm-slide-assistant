@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SCORM Slide Assistant",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Optional slide navigation, playback speed, and background-tab helpers for Articulate Storyline SCORM courses.",
   "permissions": ["storage"],
   "icons": {

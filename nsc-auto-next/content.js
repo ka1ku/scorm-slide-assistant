@@ -13,20 +13,28 @@
     if (ch.speed) state.speed = Number(ch.speed.newValue) || 1;
   });
 
-  const clickable = (el) => {
+  const visible = (el) => {
     if (!el?.getBoundingClientRect) return false;
-    if (el.getAttribute('aria-disabled') === 'true' || el.disabled) return false;
-    if (el.classList.contains('disabled')) return false;
+    if (el.style.display === 'none') return false;
+    if (el.classList.contains('hidden')) return false;
     const r = el.getBoundingClientRect();
     return r.width > 0 && r.height > 0;
   };
 
+  const clickable = (el) => {
+    if (!visible(el)) return false;
+    if (el.getAttribute('aria-disabled') === 'true' || el.disabled) return false;
+    if (el.classList.contains('disabled')) return false;
+    return true;
+  };
+
   const isQuizSlide = () => {
-    const submit = document.querySelector('#submit');
-    if (submit && submit.style.display !== 'none') return true;
-    return !!document.querySelector(
-      '[data-model-id][class*="quiz"], .quiz-slide, #nav-controls button#submit'
-    );
+    // Only treat as quiz when Submit is actually shown (Storyline keeps it in DOM hidden).
+    for (const sel of ['#submit', '#nav-controls button#submit']) {
+      const el = document.querySelector(sel);
+      if (visible(el)) return true;
+    }
+    return !!document.querySelector('[data-model-id][class*="quiz"], .quiz-slide');
   };
 
   const clickNext = () => {
@@ -35,7 +43,10 @@
     const now = Date.now();
     if (now - state.lastClick < COOLDOWN_MS) return;
     state.lastClick = now;
-    btn.click();
+    try {
+      btn.focus();
+      btn.click();
+    } catch (_) {}
   };
 
   const setSpeed = (target) => {
@@ -60,7 +71,7 @@
     subtree: true,
     childList: true,
     attributes: true,
-    attributeFilter: ['aria-disabled', 'class', 'disabled'],
+    attributeFilter: ['aria-disabled', 'style', 'class', 'disabled'],
   });
   setInterval(tick, 1000);
   tick();

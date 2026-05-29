@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Chrome MV3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?logo=googlechrome&logoColor=white)](manifest.json)
-[![Version](https://img.shields.io/badge/version-1.3.0-blue)](manifest.json)
+[![Version](https://img.shields.io/badge/version-1.3.1-blue)](manifest.json)
 
 Optional browser-extension controls for **Articulate Storyline** courses delivered through SCORM—auto-advancing slides when the player allows, adjusting built-in playback speed, and helping media continue when the tab is in the background.
 
